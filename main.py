@@ -131,4 +131,21 @@ def UIGF_Converter(fileName, UID):
 
 
 if __name__ == "__main__":
-    UIGF_Converter("paimonmoe_wish_history.xlsx", "107847862")
+    print("=" * 20)
+    print("Paimon.moe UIGF Converter")
+    print("版本：0.9")
+    print("发布于：https://github.com/Masterain98/Paimon.moe-WishHistory-UIGF-Exporter")
+    print("=" * 20)
+    print("本工具用于Paimon.moe导出的Excel格式祈愿记录向UIGF格式转化")
+    print("=" * 20)
+    original_xlsx_name = input("请输入原始Excel文件路径：")
+    user_uid_input = input("请输入UID：")
+    print("=" * 20)
+    try:
+        UIGF_Converter(original_xlsx_name, user_uid_input)
+        input("Excel转换已结束，按任意键退出...")
+    except FileNotFoundError:
+        input("文件名错误，请尝试将原始Excel修改为较为简单的名称...")
+    except Exception as err:
+        print("主程序发生意外错误，请联系开发者")
+        input(err)
