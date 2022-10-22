@@ -1,3 +1,7 @@
 /.idea/
 /__pycache__/
-
+*.xlsx
+uigf_*.json
+/build/
+/dist/
+*.spec

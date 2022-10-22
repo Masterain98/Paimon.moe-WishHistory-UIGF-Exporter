@@ -1,6 +1,16 @@
+import time
+
 import pandas as pd
 import json
+import requests
+import os
 from uigfTools import uigf_gacha_type_generator
+
+# 读取角色和武器的ID对照表
+item_dict = json.loads(requests.get("https://api.uigf.org/dict/en.json").text)
+
+with open("EngToChs.json", "r", encoding="utf-8") as f:
+    eng_to_chs_dict = json.load(f)
 
 
 def type_translate(x: str) -> str:
@@ -10,6 +20,13 @@ def type_translate(x: str) -> str:
         return "角色"
     else:
         return ""
+
+
+def item_id_converter(x: str) -> int:
+    if x in item_dict.keys():
+        return item_dict[x]
+    print("转换物品 ID 错误： " + x)
+    return 0
 
 
 def UIGF_Converter(file_name, UID):
@@ -27,12 +44,10 @@ def UIGF_Converter(file_name, UID):
     df3 = pd.read_excel(file_name, sheet_name="Standard")
     df4 = pd.read_excel(file_name, sheet_name="Beginners' Wish")
 
-    with open("zh.json", 'r') as load_f:
-        zh_dict = json.load(load_f)
-
     # 角色活动祈愿
     # 翻译名称
-    df1["name"] = df1.Name.apply(lambda x: zh_dict[x])
+    df1["item_id"] = df1.Name.apply(lambda x: item_dict[x])
+    df1["name"] = df1.Name.apply(lambda x: eng_to_chs_dict[x])
     df1.drop(columns=['Name'], inplace=True)
     # 翻译种类
     df1["item_type"] = df1.Type.apply(lambda x: type_translate(x))
@@ -48,7 +63,8 @@ def UIGF_Converter(file_name, UID):
 
     # 武器活动祈愿
     # 翻译名称
-    df2["name"] = df2.Name.apply(lambda x: zh_dict[x])
+    df2["item_id"] = df2.Name.apply(lambda x: item_id_converter(x))
+    df2["name"] = df2.Name.apply(lambda x: eng_to_chs_dict[x])
     df2.drop(columns=['Name'], inplace=True)
     # 翻译种类
     df2["item_type"] = df2.Type.apply(lambda x: type_translate(x))
@@ -63,7 +79,8 @@ def UIGF_Converter(file_name, UID):
 
     # 常驻祈愿
     # 翻译名称
-    df3["name"] = df3.Name.apply(lambda x: zh_dict[x])
+    df3["item_id"] = df3.Name.apply(lambda x: item_id_converter(x))
+    df3["name"] = df3.Name.apply(lambda x: eng_to_chs_dict[x])
     df3.drop(columns=['Name'], inplace=True)
     # 翻译种类
     df3["item_type"] = df3.Type.apply(lambda x: type_translate(x))
@@ -78,7 +95,7 @@ def UIGF_Converter(file_name, UID):
 
     # 新手祈愿
     # 翻译名称
-    df4["name"] = df4.Name.apply(lambda x: zh_dict[x])
+    df4["item_id"] = df4.Name.apply(lambda x: item_id_converter(x))
     df4.drop(columns=['Name'], inplace=True)
     # 翻译种类
     df4["item_type"] = df4.Type.apply(lambda x: type_translate(x))
@@ -103,9 +120,8 @@ def UIGF_Converter(file_name, UID):
     MergedDF.drop(columns=['Pity', '#Roll', 'Group'], inplace=True)
     # 添加杂项列
     MergedDF["uid"] = ""
-    MergedDF["lang"] = ""
-    MergedDF["item_id"] = ""
-    MergedDF["count"] = ""
+    MergedDF["lang"] = "zh-cn"
+    MergedDF["count"] = "1"
     MergedDF["id"] = ""
     # 创建id
     firstID = 1612303200000000000 - MergedDF.shape[0]
@@ -116,28 +132,63 @@ def UIGF_Converter(file_name, UID):
     MergedDF['id'] = MergedDF['id'].astype(str)
     MergedDF['lang'] = MergedDF['lang'].astype(str)
     MergedDF['name'] = MergedDF['name'].astype(str)
+    MergedDF['item_id'] = MergedDF['item_id'].astype(str)
     MergedDF['rank_type'] = MergedDF['rank_type'].astype(str)
     MergedDF['time'] = MergedDF['time'].astype(str)
     MergedDF['uid'] = MergedDF['uid'].astype(str)
     MergedDF['uigf_gacha_type'] = MergedDF['uigf_gacha_type'].astype(str)
     # 修改列顺序
-    MergedDF = MergedDF[["count", "gacha_type", "id", "item_id", "item_type", "lang", "name",
+    MergedDF = MergedDF[["count", "gacha_type", "id", "item_type", "lang", "item_id", "name",
                          "rank_type", "time", "uid", "uigf_gacha_type"]]
 
     # 创建 UIGF Excel
     new_file_name = "uigf_" + str(UID) + ".xlsx"
     MergedDF.to_excel(new_file_name, sheet_name='原始数据', index=False)
 
+    # 创建 UIGF JSON
+    json_output = {
+        "info": {
+            "uid": UID,
+            "lang": "zh-cn",
+            "export_timestamp": int(time.time()),
+            "export_app": "Paimon.moe-WishHistory-UIGF-Exporter",
+            "export_app_version": "1.0.0",
+            "uigf_version": "v2.2"
+        }
+    }
+    output_list = []
+    for index, row in MergedDF.iterrows():
+        this_row_data = {
+            "uigf_gacha_type": row["uigf_gacha_type"],
+            "gacha_type": row["gacha_type"],
+            "name": row["name"],
+            "item_id": row["item_id"],
+            "count": row["count"],
+            "time": row["time"],
+            "rank_type": row["rank_type"],
+            "id": row["id"]
+        }
+        output_list.append(this_row_data)
+    json_output["list"] = output_list
+    with open("uigf_" + str(UID) + ".json", "w", encoding="utf-8") as f:
+        json.dump(json_output, f, ensure_ascii=False, indent=4)
+
 
 if __name__ == "__main__":
     print("=" * 20)
     print("Paimon.moe UIGF Converter")
-    print("版本：0.9")
+    print("版本：1.0.0")
     print("发布于：https://github.com/Masterain98/Paimon.moe-WishHistory-UIGF-Exporter")
     print("=" * 20)
     print("本工具用于Paimon.moe导出的Excel格式祈愿记录向UIGF格式转化")
+    print("UIGF-org: https://uigf.org/")
     print("=" * 20)
-    original_xlsx_name = input("请输入原始Excel文件路径：")
+    files = [f for f in os.listdir('.') if os.path.isfile(f)]
+    if "paimonmoe_wish_history.xlsx" in files:
+        print("检测到 paimonmoe_wish_history.xlsx 文件")
+        original_xlsx_name = "./paimonmoe_wish_history.xlsx"
+    else:
+        original_xlsx_name = input("请输入原始Excel文件路径：")
     user_uid_input = input("请输入UID：")
     print("=" * 20)
     try:
