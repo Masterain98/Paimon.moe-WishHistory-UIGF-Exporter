@@ -1,10 +1,9 @@
 import pandas as pd
 import json
-from datetime import datetime
-from uigfTools import uigfGachaTypeGenerator
+from uigfTools import uigf_gacha_type_generator
 
 
-def type_translate(x):
+def type_translate(x: str) -> str:
     if x == "Weapon":
         return "武器"
     elif x == "Character":
@@ -13,20 +12,20 @@ def type_translate(x):
         return ""
 
 
-def UIGF_Converter(fileName, UID):
+def UIGF_Converter(file_name, UID):
     debug = False
 
-    print("正在转换文件： " + fileName)
-    if fileName[0] == "\"":
-        fileName = fileName.replace("\"", "")
+    print("正在转换文件： " + file_name)
+    if file_name[0] == "\"":
+        fileName = file_name.replace("\"", "")
         if debug:
-            print("New file name: " + fileName)
+            print("New file name: " + file_name)
 
-    # 加载Paimon.moe的祈愿导出Excel文件
-    df1 = pd.read_excel(fileName, sheet_name="Character Event")
-    df2 = pd.read_excel(fileName, sheet_name="Weapon Event")
-    df3 = pd.read_excel(fileName, sheet_name="Standard")
-    df4 = pd.read_excel(fileName, sheet_name="Beginners' Wish")
+    # 加载 Paimon.moe的祈愿导出Excel文件
+    df1 = pd.read_excel(file_name, sheet_name="Character Event")
+    df2 = pd.read_excel(file_name, sheet_name="Weapon Event")
+    df3 = pd.read_excel(file_name, sheet_name="Standard")
+    df4 = pd.read_excel(file_name, sheet_name="Beginners' Wish")
 
     with open("zh.json", 'r') as load_f:
         zh_dict = json.load(load_f)
@@ -42,7 +41,7 @@ def UIGF_Converter(fileName, UID):
     df1["rank_type"] = df1["⭐"]
     df1.drop(columns=['⭐'], inplace=True)
     # 通过卡池信息判定gacha_type
-    df1["gacha_type"] = df1.apply(lambda x: uigfGachaTypeGenerator(x), axis=1)
+    df1["gacha_type"] = df1.apply(lambda x: uigf_gacha_type_generator(x), axis=1)
     df1.drop(columns=['Banner'], inplace=True)
     # 增加uigf_gacha_type列
     df1["uigf_gacha_type"] = str(301)
@@ -123,7 +122,7 @@ def UIGF_Converter(fileName, UID):
     MergedDF['uigf_gacha_type'] = MergedDF['uigf_gacha_type'].astype(str)
     # 修改列顺序
     MergedDF = MergedDF[["count", "gacha_type", "id", "item_id", "item_type", "lang", "name",
-               "rank_type", "time", "uid", "uigf_gacha_type"]]
+                         "rank_type", "time", "uid", "uigf_gacha_type"]]
 
     # 创建 UIGF Excel
     new_file_name = "uigf_" + str(UID) + ".xlsx"
