@@ -6,11 +6,34 @@ import requests
 import os
 from uigfTools import uigf_gacha_type_generator
 
+# 打印提示
+print("正在生成翻译表...")
+
 # 读取角色和武器的ID对照表
 item_dict = json.loads(requests.get("https://api.uigf.org/dict/en.json").text)
 
-with open("EngToChs.json", "r", encoding="utf-8") as f:
-    eng_to_chs_dict = json.load(f)
+# 生成翻译表
+AvatarExcelConfigData = json.loads(
+    requests.get("https://genshin-data.uigf.org/d/latest/ExcelBinOutput/AvatarExcelConfigData.json").text)
+WeaponExcelConfigData = json.loads(
+    requests.get("https://genshin-data.uigf.org/d/latest/ExcelBinOutput/WeaponExcelConfigData.json").text)
+chs_dict = json.loads(
+    requests.get("https://genshin-data.uigf.org/d/latest/TextMap/TextMapCHS.json").text)
+en_dict = json.loads(
+    requests.get("https://genshin-data.uigf.org/d/latest/TextMap/TextMapEN.json").text)
+
+eng_to_chs_dict = {}
+item_list = [AvatarExcelConfigData, WeaponExcelConfigData]
+for this_list in item_list:
+    for item in this_list:
+        this_name_hash_id = item["nameTextMapHash"]
+        try:
+            eng_name = en_dict[str(this_name_hash_id)]
+            chs_name = chs_dict[str(this_name_hash_id)]
+            eng_to_chs_dict[eng_name] = chs_name
+        except KeyError:
+            continue
+print("翻译表生成完成")
 
 
 def type_translate(x: str) -> str:
@@ -34,7 +57,7 @@ def UIGF_Converter(file_name, UID):
 
     print("正在转换文件： " + file_name)
     if file_name[0] == "\"":
-        fileName = file_name.replace("\"", "")
+        file_name = file_name.replace("\"", "")
         if debug:
             print("New file name: " + file_name)
 
@@ -124,8 +147,8 @@ def UIGF_Converter(file_name, UID):
     MergedDF["count"] = "1"
     MergedDF["id"] = ""
     # 创建id
-    firstID = 1612303200000000000 - MergedDF.shape[0]
-    MergedDF['id'] = firstID + MergedDF.index
+    first_id = 1612303200000000000 - MergedDF.shape[0]
+    MergedDF['id'] = first_id + MergedDF.index
     # 重置数据类型
     MergedDF['count'] = MergedDF['count'].astype(str)
     MergedDF['gacha_type'] = MergedDF['gacha_type'].astype(str)
