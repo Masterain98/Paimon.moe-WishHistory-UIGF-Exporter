@@ -34,6 +34,8 @@ def uigf_gacha_type_generator(row):
             gacha_type = 301
         elif datetime(2021, 10, 13, 6, 0, 0) < gacha_time < datetime(2021, 11, 2, 17, 59, 59):
             gacha_type = 301
+        elif datetime(2022, 11, 18, 18, 0, 0) < gacha_time < datetime(2022, 12, 6, 14, 59, 59):
+            gacha_type = 400
     elif banner_name == "Gentry of Hermitage":
         # 钟离
         gacha_type = 1
@@ -72,6 +74,8 @@ def uigf_gacha_type_generator(row):
             gacha_type = 400
         elif datetime(2022, 5, 31, 9, 0, 0) < gacha_time < datetime(2022, 6, 21, 17, 59, 59):
             gacha_type = 400
+        elif datetime(2023, 1, 18, 6, 0, 0) < gacha_time < datetime(2023, 2, 7, 17, 59, 59):
+            gacha_type = 400
     elif banner_name == "Dance of Lanterns":
         # 刻晴
         gacha_type = 1
@@ -83,6 +87,8 @@ def uigf_gacha_type_generator(row):
         if datetime(2021, 3, 2, 18, 0, 0) < gacha_time < datetime(2021, 3, 16, 15, 0, 0):
             gacha_type = 301
         elif datetime(2021, 11, 2, 18, 0, 0) < gacha_time < datetime(2021, 11, 23, 14, 59, 59):
+            gacha_type = 301
+        elif datetime(2023, 2, 7, 18, 0, 0) < gacha_time < datetime(2023, 2, 28, 14, 59, 59):
             gacha_type = 301
     elif banner_name == "Born of Ocean Swell":
         # 优菈
@@ -105,6 +111,8 @@ def uigf_gacha_type_generator(row):
             gacha_type = 301
         elif datetime(2022, 4, 19, 18, 0, 0) < gacha_time < datetime(2022, 5, 31, 5, 59, 59):
             gacha_type = 301
+        elif datetime(2023, 3, 21, 18, 0, 0) < gacha_time < datetime(2023, 4, 11, 14, 59, 59):
+            gacha_type = 400
     elif banner_name == "Tapestry of Golden Flames":
         # 宵宫
         gacha_type = 1
@@ -112,12 +120,16 @@ def uigf_gacha_type_generator(row):
             gacha_type = 301
         elif datetime(2022, 8, 2, 18, 0, 0) < gacha_time < datetime(2022, 8, 23, 14, 59, 59):
             gacha_type = 301
+        elif datetime(2022, 11, 2, 6, 0, 0) < gacha_time < datetime(2022, 11, 18, 17, 59, 59):
+            gacha_type = 400
     elif banner_name == "Reign of Serenity":
         # 雷电将军
         gacha_type = 1
         if datetime(2021, 9, 1, 6, 0, 0) < gacha_time < datetime(2021, 9, 21, 17, 59, 59):
             gacha_type = 301
         elif datetime(2022, 3, 8, 18, 0, 0) < gacha_time < datetime(2022, 3, 29, 14, 59, 59):
+            gacha_type = 301
+        elif datetime(2022, 12, 27, 18, 0, 0) < gacha_time < datetime(2023, 1, 17, 14, 59, 59):
             gacha_type = 301
     elif banner_name == "Drifting Luminescence":
         # 珊瑚宫心海
@@ -135,26 +147,36 @@ def uigf_gacha_type_generator(row):
             gacha_type = 301
         elif datetime(2022, 6, 21, 18, 0, 0) < gacha_time < datetime(2022, 7, 12, 14, 59, 59):
             gacha_type = 301
+        elif datetime(2022, 12, 7, 6, 0, 0) < gacha_time < datetime(2022, 12, 27, 17, 59, 59):
+            gacha_type = 400
     elif banner_name == "The Transcendent One Returns":
         # 申鹤
         gacha_type = 1
         if datetime(2022, 1, 5, 6, 0, 0) < gacha_time < datetime(2022, 1, 25, 17, 59, 59):
+            gacha_type = 301
+        elif datetime(2023, 3, 21, 18, 0, 0) < gacha_time < datetime(2023, 4, 11, 14, 59, 59):
             gacha_type = 301
     elif banner_name == "Everbloom Violet":
         # 八重神子
         gacha_type = 1
         if datetime(2022, 2, 16, 6, 0, 0) < gacha_time < datetime(2022, 3, 8, 17, 59, 59):
             gacha_type = 301
+        elif datetime(2022, 11, 18, 18, 0, 0) < gacha_time < datetime(2022, 12, 6, 14, 59, 59):
+            gacha_type = 301
     elif banner_name == "Azure Excursion":
         # 神里绫人
         gacha_type = 1
         if datetime(2022, 3, 30, 6, 0, 0) < gacha_time < datetime(2022, 4, 19, 18, 0, 0):
             gacha_type = 301
+        elif datetime(2022, 12, 27, 18, 0, 0) < gacha_time < datetime(2023, 1, 17, 14, 59, 59):
+            gacha_type = 400
     elif banner_name == "Discerner of Enigmas":
         # 夜兰
         gacha_type = 1
         if datetime(2022, 5, 31, 9, 0, 0) < gacha_time < datetime(2022, 6, 21, 17, 59, 59):
             gacha_type = 301
+        elif datetime(2023, 2, 7, 18, 0, 0) < gacha_time < datetime(2023, 2, 28, 14, 59, 59):
+            gacha_type = 400
     elif banner_name == "Viridescent Vigil":
         # 提纳里
         gacha_type = 1
@@ -165,9 +187,31 @@ def uigf_gacha_type_generator(row):
         gacha_type = 1
         if datetime(2022, 9, 28, 6, 0, 0) < gacha_time < datetime(2022, 10, 14, 17, 59, 59):
             gacha_type = 301
+        elif datetime(2023, 3, 1, 6, 0, 0) < gacha_time < datetime(2023, 3, 21, 17, 59, 59):
+            gacha_type = 400
     elif banner_name == "Twirling Lotus":
         # 妮露
         gacha_type = 1
         if datetime(2022, 10, 14, 18, 0, 0) < gacha_time < datetime(2022, 11, 1, 14, 59, 59):
+            gacha_type = 301
+    elif banner_name == "The Moongrass' Enlightenment":
+        # 纳西妲
+        gacha_type = 1
+        if datetime(2022, 11, 2, 6, 0, 0) < gacha_time < datetime(2022, 11, 18, 17, 59, 59):
+            gacha_type = 301
+    elif banner_name == "From Ashes Reborn":
+        # 流浪者
+        gacha_type = 1
+        if datetime(2022, 12, 7, 6, 0, 0) < gacha_time < datetime(2022, 12, 27, 17, 59, 59):
+            gacha_type = 301
+    elif banner_name == "Caution In Confidence":
+        # 艾尔海森
+        gacha_type = 1
+        if datetime(2023, 1, 18, 6, 0, 0) < gacha_time < datetime(2023, 2, 7, 17, 59, 59):
+            gacha_type = 301
+    elif banner_name == "Auric Blaze":
+        # 迪希亚
+        gacha_type = 1
+        if datetime(2023, 3, 1, 6, 0, 0) < gacha_time < datetime(2023, 3, 21, 17, 59, 59):
             gacha_type = 301
     return gacha_type
