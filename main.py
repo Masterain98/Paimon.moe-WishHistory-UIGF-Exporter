@@ -119,6 +119,7 @@ def UIGF_Converter(file_name, UID):
     # 新手祈愿
     # 翻译名称
     df4["item_id"] = df4.Name.apply(lambda x: item_id_converter(x))
+    df4["name"] = df4.Name.apply(lambda x: eng_to_chs_dict[x])
     df4.drop(columns=['Name'], inplace=True)
     # 翻译种类
     df4["item_type"] = df4.Type.apply(lambda x: type_translate(x))
@@ -127,8 +128,8 @@ def UIGF_Converter(file_name, UID):
     df4["rank_type"] = df4["⭐"]
     df4.drop(columns=['⭐'], inplace=True)
     # 创建gacha_type列
-    df4["gacha_type"] = str(200)
-    df4["uigf_gacha_type"] = str(200)
+    df4["gacha_type"] = str(100)
+    df4["uigf_gacha_type"] = str(100)
     df4.drop(columns=['Banner'], inplace=True)
 
     # 连接DF
@@ -189,7 +190,8 @@ def UIGF_Converter(file_name, UID):
             "count": row["count"],
             "time": row["time"],
             "rank_type": row["rank_type"],
-            "id": row["id"]
+            "id": row["id"],
+            "item_type": row["item_type"]
         }
         output_list.append(this_row_data)
     json_output["list"] = output_list
